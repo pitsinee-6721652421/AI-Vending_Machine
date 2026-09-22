@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ตู้ขายคุกกี้ & เบเกอรี่</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="top-header">
+        <div class="brand-badge">
+          <div class="brand-icon">🍪</div>
+          <div class="brand-text">
+            <span>Cookie & Bakery</span>
+            <small>HOMEMADE</small>
+          </div>
+        </div>
+
+        <div class="brand-center">
+          <h1>ตู้ขายเบเกอรี่ &amp; เครื่องดื่ม</h1>
+          <p>สั่งได้ง่าย รวดเร็ว พร้อมส่งตรงถึงมือคุณ</p>
+          <div class="delivery-tag">เก็บได้ 4–7 วัน</div>
+        </div>
+
+        <div class="brand-art">🍪</div>
+      </header>
+
+      <nav class="category-bar" aria-label="ประเภทสินค้า">
+        <button class="filter-tab active" data-category="all">ทั้งหมด</button>
+        <button class="filter-tab" data-category="cookie">เบเกอรี่</button>
+        <button class="filter-tab" data-category="drink">เครื่องดื่ม</button>
+      </nav>
+
+      <main class="content-grid">
+        <section class="menu-panel">
+          <div id="menuGrid" class="menu-grid"></div>
+        </section>
+
+        <aside class="summary-panel">
+          <div class="summary-header">
+            <h2>ตะกร้าของคุณ</h2>
+            <span class="mini-badge">1 ชิ้น/ครั้ง</span>
+          </div>
+
+          <div id="cartItems" class="cart-items"></div>
+
+          <div class="total-row">
+            <span>รวมทั้งหมด</span>
+            <strong id="totalPrice">0 บาท</strong>
+          </div>
+
+          <div id="paymentBlock" class="payment-block hidden">
+            <p class="section-label">วิธีชำระ</p>
+            <div class="payment-methods">
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="cash" checked />
+                <span>เงินสด</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="qr_code" />
+                <span>QR Code</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="promptpay" />
+                <span>พร้อมเพย์</span>
+              </label>
+            </div>
+
+            <div id="cashWrap" class="cash-input">
+              <label for="cashAmount">จำนวนเงินที่จ่าย</label>
+              <input id="cashAmount" type="number" min="0" step="1" placeholder="กรอกจำนวนเงิน" />
+            </div>
+
+            <div id="qrWrap" class="qr-box">
+              <img id="qrImage" class="qr-image" alt="QR Code" />
+              <div id="qrPattern" class="qr-pattern" aria-label="QR code"></div>
+              <p id="qrText">สแกน QR Code เพื่อชำระเงิน</p>
+              <p id="promptpayText" class="promptpay-info">พร้อมเพย์: 0917048020<br />พิชญ์สินี แก้วจันทร์แดง</p>
+            </div>
+          </div>
+
+          <button id="purchaseBtn" class="pay-btn">ชำระเงิน</button>
+          <div id="messageBox" class="message-box" aria-live="polite"></div>
+          <div id="successOverlay" class="success-overlay hidden" aria-live="polite">
+            <div class="success-badge">✓</div>
+            <div class="success-text">สั่งซื้อสำเร็จ<br />ขอบคุณค่ะ!</div>
+          </div>
+        </aside>
+      </main>
+
+      <section class="steps-box">
+        <div class="step-item">
+          <div class="step-no">1</div>
+          <div>
+            <strong>เลือกสินค้า</strong>
+            <p>เลือกเมนูที่ต้องการจากแถบประเภท</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-no">2</div>
+          <div>
+            <strong>ตรวจสอบสินค้า</strong>
+            <p>ดูรายละเอียดสินค้าที่เลือกในตะกร้า</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-no">3</div>
+          <div>
+            <strong>ชำระเงิน</strong>
+            <p>เลือกการชำระเงิน เงินสด หรือ QR Code</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-no">4</div>
+          <div>
+            <strong>รอรับสินค้า</strong>
+            <p>รอรับสินค้าได้ทันทีหลังชำระเสร็จ</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
