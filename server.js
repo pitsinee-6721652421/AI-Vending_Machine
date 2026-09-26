@@ -5,18 +5,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const menu = [
-  { id: 1, name: 'คุกกี้ช็อกชิป', price: 30, type: 'snack' },
-  { id: 2, name: 'คุกกี้ชาเขียว', price: 40, type: 'snack' },
-  { id: 3, name: 'คุกกี้เรดเวลเวท', price: 45, type: 'snack' },
-  { id: 4, name: 'คุกกี้เนย', price: 30, type: 'snack' },
-  { id: 5, name: 'ชาไทย', price: 25, type: 'drink' },
-  { id: 6, name: 'ชามะนาว', price: 30, type: 'drink' },
-  { id: 7, name: 'น้ำส้ม', price: 35, type: 'drink' },
-  { id: 8, name: 'น้ำแอปเปิล', price: 35, type: 'drink' },
-  { id: 9, name: 'น้ำเปล่า', price: 10, type: 'drink' },
-  { id: 10, name: 'คอนเฟลกลูกเกด', price: 40, type: 'snack' },
-  { id: 11, name: 'คอนเฟลกคาราเมล', price: 45, type: 'snack' },
-  { id: 12, name: 'คอนเฟลกช็อกโกแลต', price: 50, type: 'snack' }
+  { id: 1, name: 'คุกกี้ช็อกชิป', price: 30, type: 'snack', stock: 10 },
+  { id: 2, name: 'คุกกี้ชาเขียว', price: 40, type: 'snack', stock: 10 },
+  { id: 3, name: 'คุกกี้เรดเวลเวท', price: 45, type: 'snack', stock: 10 },
+  { id: 4, name: 'คุกกี้เนย', price: 30, type: 'snack', stock: 10 },
+  { id: 5, name: 'ชาไทย', price: 25, type: 'drink', stock: 10 },
+  { id: 6, name: 'ชามะนาว', price: 30, type: 'drink', stock: 10 },
+  { id: 7, name: 'น้ำส้ม', price: 35, type: 'drink', stock: 10 },
+  { id: 8, name: 'น้ำแอปเปิล', price: 35, type: 'drink', stock: 10 },
+  { id: 9, name: 'น้ำเปล่า', price: 10, type: 'drink', stock: 10 },
+  { id: 10, name: 'คอนเฟลกลูกเกด', price: 40, type: 'snack', stock: 10 },
+  { id: 11, name: 'คอนเฟลกคาราเมล', price: 45, type: 'snack', stock: 10 },
+  { id: 12, name: 'คอนเฟลกช็อกโกแลต', price: 50, type: 'snack', stock: 10 }
 ];
 
 app.use(express.json());
@@ -42,6 +42,9 @@ app.post('/api/purchase', (req, res) => {
       if (!item) return null;
       const qty = Number(entry.quantity || 1);
       if (!Number.isFinite(qty) || qty <= 0) return null;
+      if (qty > item.stock) {
+        return null;
+      }
       return { item, quantity: qty };
     })
     .filter(Boolean);
@@ -49,7 +52,7 @@ app.post('/api/purchase', (req, res) => {
   if (validatedItems.length === 0) {
     return res.status(404).json({
       success: false,
-      message: 'ไม่พบสินค้าในรายการชำระเงิน'
+      message: 'ไม่พบสินค้าในรายการชำระเงินหรือสต็อกไม่เพียงพอ'
     });
   }
 
@@ -62,6 +65,10 @@ app.post('/api/purchase', (req, res) => {
 
   const totalAmount = validatedItems.reduce((sum, entry) => sum + (entry.item.price * entry.quantity), 0);
   const payment = (paymentMethod || 'cash').toString();
+
+  validatedItems.forEach((entry) => {
+    entry.item.stock -= entry.quantity;
+  });
 
   if (payment === 'cash') {
     const amount = Number(cashAmount || 0);

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ตู้ขายคุกกี้ & เบเกอรี่</title>
+    <title>ตู้ขาย เบเกอรี่ & เครื่องดื่ม</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -12,7 +12,7 @@
         <div class="brand-badge">
           <div class="brand-icon">🍪</div>
           <div class="brand-text">
-            <span>Cookie & Bakery</span>
+            <span>Bakery & Drinks</span>
             <small>HOMEMADE</small>
           </div>
         </div>
@@ -26,31 +26,79 @@
         <div class="brand-art">🍪</div>
       </header>
 
-      <nav class="category-bar" aria-label="ประเภทสินค้า">
-        <button class="filter-tab active" data-category="all">ทั้งหมด</button>
-        <button class="filter-tab" data-category="cookie">เบเกอรี่</button>
-        <button class="filter-tab" data-category="drink">เครื่องดื่ม</button>
-      </nav>
+      <section id="catalogView" class="screen active">
+        <nav class="category-bar" aria-label="ประเภทสินค้า">
+          <button class="filter-tab active" data-category="all">ทั้งหมด</button>
+          <button class="filter-tab" data-category="cookie">เบเกอรี่</button>
+          <button class="filter-tab" data-category="drink">เครื่องดื่ม</button>
+        </nav>
 
-      <main class="content-grid">
-        <section class="menu-panel">
-          <div id="menuGrid" class="menu-grid"></div>
-        </section>
+        <main class="content-grid">
+          <section class="menu-panel">
+            <div id="menuGrid" class="menu-grid"></div>
+          </section>
 
-        <aside class="summary-panel">
-          <div class="summary-header">
-            <h2>ตะกร้าของคุณ</h2>
-            <span class="mini-badge">1 ชิ้น/ครั้ง</span>
+          <aside class="summary-panel">
+            <div class="summary-header">
+              <h2>ตะกร้าของคุณ</h2>
+              <span class="mini-badge">1 ชิ้น/ครั้ง</span>
+            </div>
+
+            <div id="cartItems" class="cart-items"></div>
+
+            <div class="total-row">
+              <span>รวมทั้งหมด</span>
+              <strong id="totalPrice">0 บาท</strong>
+            </div>
+
+            <div class="catalog-actions">
+              <button id="goReviewBtn" class="secondary-btn" type="button">ตรวจสอบสินค้า</button>
+              <button id="goPaymentBtn" class="primary-btn" type="button" style="display: none;">ชำระเงิน</button>
+            </div>
+          </aside>
+        </main>
+      </section>
+
+      <section id="reviewView" class="screen review-screen">
+        <div class="subpage-panel">
+          <div class="subpage-header">
+            <div>
+              <!--<p class="eyebrow">ตรวจสอบสินค้า</p>-->
+              <h2>รายการสินค้าที่เลือก</h2>
+            </div>
+            <button id="backToCatalogBtn" class="ghost-btn" type="button">กลับไปเลือกสินค้า</button>
           </div>
 
-          <div id="cartItems" class="cart-items"></div>
+          <div id="reviewCartList" class="review-cart-list"></div>
 
-          <div class="total-row">
-            <span>รวมทั้งหมด</span>
-            <strong id="totalPrice">0 บาท</strong>
+          <div class="review-summary-row">
+            <span>ยอดรวม</span>
+            <strong id="reviewTotal">0 บาท</strong>
           </div>
 
-          <div id="paymentBlock" class="payment-block hidden">
+          <div class="review-actions">
+            <button id="reviewBackBtn" class="secondary-btn" type="button">ย้อนกลับ</button>
+            <button id="reviewToPaymentBtn" class="primary-btn" type="button">ไปหน้าชำระเงิน</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="paymentView" class="screen payment-screen">
+        <div class="subpage-panel">
+          <div class="subpage-header">
+            <div>
+              <p class="eyebrow">ชำระเงิน</p>
+              <h2>เลือกวิธีการชำระ</h2>
+            </div>
+            <button id="paymentBackBtn" class="ghost-btn" type="button">กลับไปตรวจสอบ</button>
+          </div>
+
+          <div class="payment-summary-box">
+            <span>ยอดที่ต้องชำระ</span>
+            <strong id="paymentTotal">0 บาท</strong>
+          </div>
+
+          <div id="paymentBlock" class="payment-block visible">
             <p class="section-label">วิธีชำระ</p>
             <div class="payment-methods">
               <label class="payment-option">
@@ -67,7 +115,7 @@
               </label>
             </div>
 
-            <div id="cashWrap" class="cash-input">
+            <div id="cashWrap" class="cash-input visible">
               <label for="cashAmount">จำนวนเงินที่จ่าย</label>
               <input id="cashAmount" type="number" min="0" step="1" placeholder="กรอกจำนวนเงิน" />
             </div>
@@ -80,14 +128,20 @@
             </div>
           </div>
 
-          <button id="purchaseBtn" class="pay-btn">ชำระเงิน</button>
-          <div id="messageBox" class="message-box" aria-live="polite"></div>
-          <div id="successOverlay" class="success-overlay hidden" aria-live="polite">
-            <div class="success-badge">✓</div>
-            <div class="success-text">สั่งซื้อสำเร็จ<br />ขอบคุณค่ะ!</div>
+          <div class="review-actions payment-actions">
+            <button id="paymentReviewBtn" class="secondary-btn" type="button">ดูรายการสินค้า</button>
+            <button id="refundBtn" class="ghost-btn" type="button">คืนเงิน</button>
+            <button id="purchaseBtn" class="primary-btn" type="button">ชำระเงิน</button>
           </div>
-        </aside>
-      </main>
+        </div>
+      </section>
+
+      <div id="messageBox" class="message-box" aria-live="polite"></div>
+      <div id="successOverlay" class="success-overlay hidden" aria-live="polite">
+        <div class="success-badge">✓</div>
+        <div class="success-text">สั่งซื้อสำเร็จ<br />ขอบคุณค่ะ!<br />รอรับสินค้าได้เลย</div>
+
+      </div>
 
       <section class="steps-box">
         <div class="step-item">
