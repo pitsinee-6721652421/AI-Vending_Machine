@@ -70,6 +70,11 @@ app.post('/api/purchase', (req, res) => {
     entry.item.stock -= entry.quantity;
   });
 
+  const updatedStocks = menu.map((item) => ({
+    itemId: item.id,
+    remainingStock: item.stock
+  }));
+
   if (payment === 'cash') {
     const amount = Number(cashAmount || 0);
 
@@ -88,6 +93,7 @@ app.post('/api/purchase', (req, res) => {
         ...entry.item,
         quantity: entry.quantity
       })),
+      updatedStocks,
       paymentMethod: payment,
       paidAmount: amount,
       change,
@@ -102,6 +108,7 @@ app.post('/api/purchase', (req, res) => {
         ...entry.item,
         quantity: entry.quantity
       })),
+      updatedStocks,
       paymentMethod: payment,
       totalAmount,
       paidAmount: totalAmount,

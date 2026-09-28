@@ -387,6 +387,8 @@ purchaseBtn.addEventListener('click', async () => {
         if (!updated) return item;
         return { ...item, stock: Number(updated.remainingStock) };
       });
+    } else {
+      await fetchMenu();
     }
 
     setMessage('success', paymentText);
