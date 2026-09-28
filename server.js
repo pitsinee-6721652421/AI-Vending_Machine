@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000;
 
 const menu = [
   { id: 1, name: 'คุกกี้ช็อกชิป', price: 30, type: 'snack', stock: 10 },
-  { id: 2, name: 'คุกกี้ชาเขียว', price: 40, type: 'snack', stock: 10 },
+  { id: 2, name: 'คุกกี้ชาเขียว', price: 40, type: 'snack', stock: 3 },
   { id: 3, name: 'คุกกี้เรดเวลเวท', price: 45, type: 'snack', stock: 10 },
   { id: 4, name: 'คุกกี้เนย', price: 30, type: 'snack', stock: 10 },
   { id: 5, name: 'ชาไทย', price: 25, type: 'drink', stock: 10 },
@@ -82,7 +82,6 @@ app.post('/api/purchase', (req, res) => {
     }
 
     const change = amount - totalAmount;
-
     return res.json({
       success: true,
       items: validatedItems.map((entry) => ({
@@ -96,7 +95,6 @@ app.post('/api/purchase', (req, res) => {
       message: `ซื้อสินค้า ${validatedItems.map((entry) => entry.item.name).join(', ')} สำเร็จแล้ว รับเงินทอน ${change} บาท`
     });
   }
-
   if (payment === 'qr_code' || payment === 'promptpay') {
     return res.json({
       success: true,
@@ -110,7 +108,6 @@ app.post('/api/purchase', (req, res) => {
       message: `ซื้อสินค้า ${validatedItems.map((entry) => entry.item.name).join(', ')} สำเร็จแล้ว ชำระด้วย ${payment === 'promptpay' ? 'พร้อมเพย์' : 'QR Code'}`
     });
   }
-
   return res.status(400).json({
     success: false,
     message: 'รูปแบบการชำระเงินไม่ถูกต้อง โปรดเลือกเงินสด QR Code หรือ พร้อมเพย์'

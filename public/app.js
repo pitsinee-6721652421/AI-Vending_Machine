@@ -65,7 +65,6 @@ const showSuccessOverlay = () => {
     successOverlay.classList.add('hidden');
   }, 2500);
 };
-//  
 const showScreen = (screenName) => {
   catalogView.classList.toggle('active', screenName === 'catalog');
   reviewView.classList.toggle('active', screenName === 'review');
@@ -73,15 +72,12 @@ const showScreen = (screenName) => {
   if (screenName === 'review') {
     renderReviewPage();
   }
-
   if (screenName === 'payment') {
     updatePaymentUI();
     paymentTotal.textContent = `${getCartTotal()} บาท`;
   }
 };
-
 //  QR 
-
 const buildQrPattern = (total) => {
   const cells = [];
   for (let i = 0; i < 36; i += 1) {
@@ -98,20 +94,14 @@ const buildQrPattern = (total) => {
   cells.forEach((cell) => qrPattern.appendChild(cell));
 };
 
-
 // รวมราคา
 const getCartTotal = () => cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
 // สร้าง URL QR code mock จากยอดรวมสินค้า
 const buildQrImageUrl = (total) => {
   const payload = `VENDING|TOTAL|${total}|THB`;
   return `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(payload)}`;
 };
 
-// ===== ปรับ UI ตามวิธีชำระ =====
-// cash = ให้กรอกจำนวนเงิน
-// qr_code = แสดง QR Code
-// promptpay = แสดงเลขพร้อมเพย์
 const updatePaymentUI = () => {
   const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
   const total = getCartTotal();
@@ -121,7 +111,6 @@ const updatePaymentUI = () => {
   if (refundBtn) {
     refundBtn.disabled = selectedMethod !== 'cash';
   }
-
   if (selectedMethod === 'cash') {
     cashWrap.classList.add('visible');
     qrWrap.classList.remove('visible');
@@ -147,15 +136,13 @@ const updatePaymentUI = () => {
   }
 };
 
-// ===== หน้า review / ตรวจสอบสินค้า =====
-// แสดงสินค้าที่เลือกไว้ พร้อมปุ่มลบ และยอดรวม
+//  ตรวจสอบสินค้า
 const renderReviewPage = () => {
   if (cart.length === 0) {
     reviewCartList.innerHTML = '<div class="review-item empty">ยังไม่มีสินค้าในตะกร้า</div>';
     reviewTotal.textContent = '0 บาท';
     return;
   }
-
   reviewCartList.innerHTML = cart.map((item) => `
     <div class="review-item">
       <div class="review-item-left">
@@ -173,7 +160,6 @@ const renderReviewPage = () => {
   `).join('');
 
   reviewTotal.textContent = `${getCartTotal()} บาท`;
-
   reviewCartList.querySelectorAll('.remove-btn').forEach((button) => {
     button.addEventListener('click', () => {
       removeFromCart(Number(button.dataset.itemId));
@@ -181,8 +167,7 @@ const renderReviewPage = () => {
   });
 };
 
-// ===== ลบสินค้าออกจากตะกร้า =====
-// เมื่อกดปุ่มลบ จะกรองสินค้าออกจาก cart และ refresh UI ใหม่
+// ลบสินค้าออกจากตะกร้า 
 const removeFromCart = (itemId) => {
   cart = cart.filter((item) => item.id !== itemId);
   updateCartUI();
@@ -190,8 +175,7 @@ const removeFromCart = (itemId) => {
   setMessage('success', 'ลบสินค้าออกจากตะกร้าแล้ว');
 };
 
-// ===== อัปเดตตะกร้าและยอดรวม =====
-// ดึงข้อมูลจาก cart แล้ว render กลับไปที่หน้าตะกร้าและหน้าตรวจสอบสินค้า
+// อัปเดตตะกร้า
 const updateCartUI = () => {
   if (cart.length === 0) {
     cartItems.innerHTML = '<div class="cart-item"><div class="info"><div class="name">ยังไม่มีสินค้าในตะกร้า</div></div></div>';
@@ -228,16 +212,13 @@ const updateCartUI = () => {
   paymentBlock.classList.add('visible');
 };
 
-// ===== กรองเมนูตามประเภท =====
-// all = ทั้งหมด, cookie = เบเกอรี่, drink = เครื่องดื่ม
+//กรองเมนูตามประเภท 
 const filterItems = () => {
   if (activeCategory === 'all') return menuItems;
   if (activeCategory === 'cookie') return menuItems.filter((item) => item.type === 'snack');
   return menuItems.filter((item) => item.type === 'drink');
 };
-
-// ===== Render เมนูสินค้า =====
-// สร้างกล่องสินค้าในหน้า catalog และเพิ่ม event ให้ปุ่ม + เพิ่มลงตะกร้า
+// Render เมนูสินค้า 
 const renderMenu = () => {
   const visibleItems = filterItems();
   menuGrid.innerHTML = '';
@@ -265,12 +246,10 @@ const renderMenu = () => {
           setMessage('error', `${item.name} หมดแล้ว เหลือ 0 ชิ้น`);
           return;
         }
-
         if (cart.length > 0) {
           setMessage('error', 'สามารถซื้อได้ครั้งละ 1 ชิ้นเท่านั้น');
           return;
         }
-
         cart.push({ ...item, quantity: 1, stock: item.stock || 10 });
         updateCartUI();
         setMessage('success', `เพิ่ม ${item.name} ลงตะกร้าแล้ว`);
@@ -281,8 +260,7 @@ const renderMenu = () => {
   });
 };
 
-// ===== โหลดสินค้า =====
-// เรียก API /api/menu เพื่อเอารายการสินค้าเข้ามาแสดงบนหน้า
+// โหลดสินค้า 
 const fetchMenu = async () => {
   try {
     const response = await fetch('/api/menu');
@@ -323,9 +301,7 @@ if (refundBtn) {
     setMessage('success', `คืนเงิน ${refundAmount} บาท แล้ว`);
   });
 }
-
-// ===== Event listeners =====
-// เมื่อกดแท็บประเภทสินค้า จะเปลี่ยน view และ render menu ใหม่
+// Event listeners
 document.querySelectorAll('.filter-tab').forEach((tab) => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.filter-tab').forEach((btn) => btn.classList.remove('active'));
@@ -334,14 +310,10 @@ document.querySelectorAll('.filter-tab').forEach((tab) => {
     renderMenu();
   });
 });
-
-// เมื่อเปลี่ยนวิธีชำระเงิน ให้แสดง UI ที่ตรงกับการชำระนั้นๆ
 document.querySelectorAll('input[name="paymentMethod"]').forEach((radio) => {
   radio.addEventListener('change', updatePaymentUI);
 });
 
-// ===== ปุ่มนำทางขั้นตอน =====
-// เรียก showScreen เพื่อไปหน้าตรวจสอบ หรือหน้าชำระเงินตาม step ที่เลือก
 if (goReviewBtn) {
   goReviewBtn.addEventListener('click', () => {
     if (cart.length === 0) {
@@ -361,28 +333,23 @@ if (goPaymentBtn) {
     showScreen('payment');
   });
 }
-
 if (reviewBackBtn) reviewBackBtn.addEventListener('click', () => showScreen('catalog'));
 if (reviewToPaymentBtn) reviewToPaymentBtn.addEventListener('click', () => showScreen('payment'));
 if (backToCatalogBtn) backToCatalogBtn.addEventListener('click', () => showScreen('catalog'));
 if (paymentBackBtn) paymentBackBtn.addEventListener('click', () => showScreen('review'));
 if (paymentReviewBtn) paymentReviewBtn.addEventListener('click', () => showScreen('review'));
-
-// ===== ส่งคำสั่งชำระเงิน =====
-// ส่ง cart + วิธีชำระ + จำนวนเงินที่กรอก ไปที่ API /api/purchase
+//ส่งคำสั่งชำระเงิน 
 purchaseBtn.addEventListener('click', async () => {
   if (cart.length === 0) {
     setMessage('error', 'กรุณาเลือกสินค้าให้เรียบร้อยก่อนชำระเงิน');
     return;
   }
-
   const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
   const requestBody = {
     items: cart.map((item) => ({ itemId: item.id, quantity: item.quantity })),
     paymentMethod,
     cashAmount: paymentMethod === 'cash' ? Number(cashAmountInput.value || 0) : getCartTotal()
   };
-
   try {
     const amountEntered = Number(cashAmountInput.value || 0);
     if (paymentMethod === 'cash' && amountEntered > 0 && amountEntered < getCartTotal()) {
